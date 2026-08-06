@@ -64,6 +64,7 @@
 
 /* ============================ base ============================ */
 *,*::before,*::after{box-sizing:border-box}
+img{max-width:100%}
 body{margin:0;background:var(--mc-page-bg);color:var(--mc-indigo-500);
   font-family:var(--mc-font-sans);font-size:var(--mc-size-body);
   line-height:var(--mc-leading-body);-webkit-font-smoothing:antialiased}
@@ -71,7 +72,9 @@ body{margin:0;background:var(--mc-page-bg);color:var(--mc-indigo-500);
 main > section{margin-block:var(--mc-section-gap);scroll-margin-top:72px}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-h1,h2,h3,h4{color:var(--mc-indigo-900);line-height:var(--mc-leading-tight)}
+h1,h2,h3,h4{color:var(--mc-indigo-900);line-height:var(--mc-leading-tight);
+  overflow-wrap:break-word}
+p,li,dd{overflow-wrap:break-word}
 p{margin:0 0 var(--mc-space-4)}
 p:last-child{margin-bottom:0}
 a{color:var(--mc-indigo-500)}
@@ -81,6 +84,7 @@ li:last-child{margin-bottom:0}
 
 /* ---- accessibility floor, keep in every deliverable ---- */
 :focus-visible{outline:2px solid var(--mc-indigo-900);outline-offset:2px;border-radius:2px}
+[hidden]{display:none!important}
 .mc-visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;
   clip-path:inset(50%);white-space:nowrap}
 .mc-skip{position:absolute;inset-inline-start:var(--mc-space-4);top:-3rem;z-index:5;
@@ -159,7 +163,12 @@ li:last-child{margin-bottom:0}
   border-radius:var(--mc-radius-card);padding:var(--mc-space-3);
   box-shadow:var(--mc-shadow-card)}
 .mc-figure img{display:block;width:100%;height:auto;
-  border-radius:var(--mc-radius-thumb)}
+  border-radius:var(--mc-radius-thumb);background:var(--mc-lavender);
+  color:var(--mc-text-muted);font-size:var(--mc-size-meta)}
+/* an image that fails to load is removed rather than left as a broken icon
+   with its alt text sprawling across the card */
+.mc-figure img.is-failed{display:none}
+.mc-figure.is-empty{display:none}
 .mc-figure img + img{margin-top:var(--mc-space-3)}
 .mc-figure figcaption{font-size:var(--mc-size-meta);color:var(--mc-text-muted);
   padding:var(--mc-space-3) var(--mc-space-2) var(--mc-space-1)}
@@ -267,7 +276,22 @@ li:last-child{margin-bottom:0}
 }
 
 /* ==================== grid, cards, list rows ==================== */
-.mc-grid{display:grid;gap:var(--mc-space-6);align-items:start}
+/* Cards that sit beside each other end on the same line. Figures are the
+   exception: stretching one would add dead white space under the caption. */
+.mc-grid{display:grid;gap:var(--mc-space-6);align-items:stretch}
+.mc-grid > .mc-figure,
+.mc-grid > .mc-stack{align-self:start}
+.mc-grid > .mc-list{height:100%}
+
+/* Vertical rhythm between the blocks of a section. Adjacent margins collapse,
+   so these set a floor of 24px without adding to the 32px already below a
+   section note. Before this, a figure placed after a grid touched it. */
+main > section > .mc-figure,
+main > section > .mc-grid,
+main > section > .mc-list,
+main > section > .mc-pager{margin-top:var(--mc-space-6)}
+main > section > .mc-section-heading + .mc-grid,
+main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
 .mc-grid--2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .mc-stack{display:grid;gap:var(--mc-space-6);align-content:start}
 .mc-list{background:var(--mc-surface);border-radius:var(--mc-radius-card);
@@ -282,6 +306,7 @@ li:last-child{margin-bottom:0}
 .mc-row{display:flex;align-items:center;justify-content:space-between;
   gap:var(--mc-space-4);padding:var(--mc-space-4) 0;text-decoration:none}
 .mc-row + .mc-row{border-top:1px solid var(--mc-hairline)}
+.mc-row__text{flex:1 1 auto;min-width:0}
 .mc-row__title{display:block;color:var(--mc-indigo-900);font-weight:600;line-height:1.35}
 .mc-row:hover .mc-row__title{color:var(--mc-indigo-500)}
 .mc-row__meta{display:block;margin-top:var(--mc-space-2);
@@ -299,6 +324,45 @@ li:last-child{margin-bottom:0}
 .mc-collabel--blue{color:var(--mc-blue)}
 .mc-collabel--green{color:var(--mc-green-text)}
 
+
+/* ============================== pager ==============================
+   Six publications at a time in two columns, paged by arrow. Without the
+   script the viewport simply shows all twenty, which is a longer page but a
+   complete one; no control is rendered that would not work. */
+.mc-pager{margin-bottom:var(--mc-section-gap)}
+.mc-pager__head{display:flex;align-items:center;justify-content:space-between;
+  gap:var(--mc-space-4);flex-wrap:wrap}
+.mc-pager__head .mc-collabel{margin-bottom:var(--mc-space-8)}
+.mc-pager__viewport{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--mc-space-4);align-content:start}
+.mc-pager__viewport .mc-pub{margin-bottom:0}
+
+.mc-pager__controls{display:flex;align-items:center;gap:var(--mc-space-3);
+  margin-bottom:var(--mc-space-8)}
+.mc-pager__btn{display:grid;place-items:center;width:40px;height:40px;padding:0;
+  background:var(--mc-surface);color:var(--mc-indigo-900);
+  border:1px solid var(--mc-indigo-500);border-radius:var(--mc-radius-pill);
+  cursor:pointer;font:inherit}
+.mc-pager__btn:hover:not(:disabled){color:var(--mc-indigo-500);
+  border-color:var(--mc-indigo-900)}
+.mc-pager__btn:disabled{color:var(--mc-text-muted);border-color:var(--mc-hairline);
+  cursor:default}
+
+@media (prefers-reduced-motion:no-preference){
+  /* the incoming page rises the same 12px used everywhere else on the page */
+  .mc-pager__viewport.is-turning .mc-pub{opacity:0;transform:translateY(12px);
+    transition:none}
+  .mc-pager__viewport .mc-pub{opacity:1;transform:none;
+    transition:opacity 320ms var(--mc-ease), transform 320ms var(--mc-ease)}
+  .mc-pager__btn{transition:color 160ms var(--mc-ease),
+    border-color 160ms var(--mc-ease), transform 160ms var(--mc-ease)}
+  .mc-pager__btn:hover:not(:disabled){transform:translateY(-2px)}
+}
+
+@media (max-width:768px){
+  .mc-pager__viewport{grid-template-columns:1fr}
+}
+
 /* ==================== publication entries ==================== */
 .mc-pub{background:var(--mc-lavender-50);border-radius:var(--mc-radius-card);
   padding:var(--mc-space-6);margin-bottom:var(--mc-space-4)}
@@ -315,7 +379,7 @@ li:last-child{margin-bottom:0}
 .mc-award{display:flex;gap:var(--mc-space-4);padding:var(--mc-space-4) 0}
 .mc-award + .mc-award{border-top:1px solid var(--mc-hairline)}
 .mc-award__meta{flex:0 0 116px;font-size:var(--mc-size-meta);color:var(--mc-text-muted)}
-.mc-award__body{margin:0;color:var(--mc-indigo-900);font-size:.9375rem}
+.mc-award__body{margin:0;min-width:0;color:var(--mc-indigo-900);font-size:.9375rem}
 .mc-award__body a{color:var(--mc-indigo-500)}
 @media (max-width:480px){
   .mc-award{flex-direction:column;gap:var(--mc-space-1)}
@@ -458,7 +522,6 @@ li:last-child{margin-bottom:0}
       </section>
     </div>
 
-    <div style="margin-top:var(--mc-space-6)">
       <section class="mc-list">
         <h3 class="mc-list__head">
           <span>Research Videos</span>
@@ -487,7 +550,6 @@ li:last-child{margin-bottom:0}
           <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/HGY9q5K14ZI/mqdefault.jpg" alt="">
         </a>
       </section>
-    </div>
   </section>
 
   <!-- ========================== JOINING THE LAB ========================== -->
@@ -776,174 +838,157 @@ li:last-child{margin-bottom:0}
   <!-- =================== PUBLICATIONS AND RECOGNITION =================== -->
   <section id="publications" aria-labelledby="pubs-h">
     <h2 class="mc-section-heading" id="pubs-h">Publications and Recognition</h2>
-    <p class="mc-section-note">Selected entries. <span class="mc-pub__type">[J]</span>
-      marks a journal article and <span class="mc-pub__type">[C]</span> a conference
-      paper. The complete list is on
-      <a href="https://scholar.google.com/citations?user=f1s8_GkAAAAJ&amp;hl=en">Google Scholar</a>.</p>
+    <p class="mc-section-note">Selected entries, six at a time.
+      <span class="mc-pub__type">[J]</span> marks a journal article and
+      <span class="mc-pub__type">[C]</span> a conference paper. The complete list
+      is on <a href="https://scholar.google.com/citations?user=f1s8_GkAAAAJ&amp;hl=en">Google
+      Scholar</a>.</p>
 
-    <div class="mc-grid mc-grid--2">
-
-      <!-- ======================= publications ======================= -->
-      <div>
-        <h3 class="mc-collabel mc-collabel--blue">Publications</h3>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">A Unified Multitask Cross-Modal Representation
-            Learning Method for Visual, Tactile, and Linguistic Grasping
-            <span class="mc-pub__type">[J]</span></h4>
-          <p class="mc-pub__authors">Yang, Babaiasl, Yang</p>
-          <p class="mc-pub__venue"><span>Information Fusion</span><span class="mc-pub__year">2026</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">NeuroCommitSSM: Decision-Centric Shared Autonomy
-            for Safe Assistive Manipulation via EEG, EMG, and Eye-Tracking Commit
-            Readiness <span class="mc-pub__type">[C]</span></h4>
-          <p class="mc-pub__authors">Sultan, Sangani, Cool, Sikorski, Liu, Akbarpour, Babaiasl</p>
-          <p class="mc-pub__venue"><span>IROS, accepted</span><span class="mc-pub__year">2026</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">A Multimodal Data Collection Framework for
-            Dialogue-Driven Assistive Robotics to Clarify Ambiguities: A
-            Wizard-of-Oz Pilot Study <span class="mc-pub__type">[C]</span></h4>
-          <p class="mc-pub__authors">Liu, Hawkins, Madden, Sultan, Esposito, Babaiasl</p>
-          <p class="mc-pub__venue"><span>BioRob, accepted</span><span class="mc-pub__year">2026</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">TriSaFeTrans: A Safety-Aware Multimodal Intent
-            Recognition Pipeline for Assistive Robotics
-            <span class="mc-pub__type">[C]</span></h4>
-          <p class="mc-pub__authors">Sultan, Cool, Liu, Tamilselvan, Babaiasl</p>
-          <p class="mc-pub__venue"><span>BioRob, accepted</span><span class="mc-pub__year">2026</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">WheelArm-Sim: A Manipulation and Navigation
-            Combined Multimodal Synthetic Data Generation Simulator for Unified
-            Control in Assistive Robotics <span class="mc-pub__type">[C]</span></h4>
-          <p class="mc-pub__authors">Liu, Sultan, Di Giorgio, Hawkins, Esposito, Babaiasl</p>
-          <p class="mc-pub__venue"><span>ISMR, accepted</span><span class="mc-pub__year">2026</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">NeuroFusion-Trans: A Transformer-Based EEG&ndash;EMG
-            Fusion Model for Assistive Robotics <span class="mc-pub__type">[J]</span></h4>
-          <p class="mc-pub__authors">Sultan, Liu, Sikorski, Alshathri, El-Shafai, Babaiasl</p>
-          <p class="mc-pub__venue"><span>IEEE Access</span><span class="mc-pub__year">2025</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">TransNN-MHA: A Transformer-Based Model to Distinguish
-            Real and Imaginary Motor Intent for Assistive Robotics
-            <span class="mc-pub__type">[J]</span></h4>
-          <p class="mc-pub__authors">Sultan, Liu, Sikorski, Babaiasl</p>
-          <p class="mc-pub__venue"><span>IEEE Access</span><span class="mc-pub__year">2025</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">Early Detection and Management of Crop Pests Using
-            Quadruped Robotic Systems: Challenges and Open Problems
-            <span class="mc-pub__type">[C]</span></h4>
-          <p class="mc-pub__authors">Camerota, Babaiasl, Shakoor, Esposito</p>
-          <p class="mc-pub__venue"><span>IEEE 101st Vehicular Technology Conference</span><span class="mc-pub__year">2025</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">Deployment of Large Language Models to Control
-            Mobile Robots at the Edge <span class="mc-pub__type">[C]</span></h4>
-          <p class="mc-pub__authors">Sikorski, Schrader, Yu, Billadeau, Meenakshi, Babaiasl</p>
-          <p class="mc-pub__venue"><span>International Conference on Mechatronics, Control and Robotics</span><span class="mc-pub__year">2025</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">Improving Robotic Arms Through Natural Language
-            Processing, Computer Vision, and Edge Computing
-            <span class="mc-pub__type">[C]</span></h4>
-          <p class="mc-pub__authors">Sikorski, Yu, Billadeau, Esposito, AliAkbarpour, Babaiasl</p>
-          <p class="mc-pub__venue"><span>International Conference on Mechatronics, Control and Robotics</span><span class="mc-pub__year">2025</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">EMG-TransNN-MHA: A Transformer-Based Model for
-            Enhanced Motor Intent Recognition in Assistive Robotics
-            <span class="mc-pub__type">[C]</span></h4>
-          <p class="mc-pub__authors">Aikkarakudiyil Joby, Sikorski, Sultan, Akbarpour, Esposito, Babaiasl</p>
-          <p class="mc-pub__venue"><span>IEEE International Conference on Big Data</span><span class="mc-pub__year">2024</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">Vision-Aided Screw-Theory-Based Inverse Kinematics
-            Control of a Robot Arm Using ROS 2 <span class="mc-pub__type">[J]</span></h4>
-          <p class="mc-pub__authors">Babaiasl, MacGavin, Montes Tolon, Roy</p>
-          <p class="mc-pub__venue"><span>Computer Vision News</span><span class="mc-pub__year">2024</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">Robotic Needle Steering: State of the Art and
-            Research Challenges <span class="mc-pub__type">[J]</span></h4>
-          <p class="mc-pub__authors">Babaiasl, Yang, Swensen</p>
-          <p class="mc-pub__venue"><span>Intelligent Service Robotics</span><span class="mc-pub__year">2022</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">Characterization and Modeling of a Thermoplastic
-            Elastomer Tissue Simulant Under Uniaxial Compression Loading
-            <span class="mc-pub__type">[J]</span></h4>
-          <p class="mc-pub__authors">Chen, Ding, Babaiasl, Yang, Swensen</p>
-          <p class="mc-pub__venue"><span>Journal of the Mechanical Behavior of Biomedical Materials</span><span class="mc-pub__year">2022</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">Resultant Radius of Curvature of Stylet-and-Tube
-            Steerable Needles <span class="mc-pub__type">[C]</span></h4>
-          <p class="mc-pub__authors">Yang, Babaiasl, Chen, Ding, Swensen</p>
-          <p class="mc-pub__venue"><span>IEEE/RSJ International Conference on Intelligent Robots and Systems</span><span class="mc-pub__year">2020</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">Fracture-Directed Waterjet Needle Steering: Design,
-            Modeling, and Path Planning <span class="mc-pub__type">[C]</span></h4>
-          <p class="mc-pub__authors">Babaiasl, Yang, Boccelli, Swensen</p>
-          <p class="mc-pub__venue"><span>IEEE RAS/EMBS International Conference for Biomedical Robotics and Biomechatronics</span><span class="mc-pub__year">2020</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">Predictive Mechanics-Based Model for Depth of Cut of
-            Waterjet in Soft Tissue <span class="mc-pub__type">[J]</span></h4>
-          <p class="mc-pub__authors">Babaiasl, Boccelli, Chen, Yang, Ding, Swensen</p>
-          <p class="mc-pub__venue"><span>Medical and Biological Engineering and Computing</span><span class="mc-pub__year">2020</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">Neural-Network-Based Asymptotic Tracking Control of
-            Unknown Nonlinear Systems with Continuous Control Command
-            <span class="mc-pub__type">[J]</span></h4>
-          <p class="mc-pub__authors">Jabbari Asl, Babaiasl, Narikiyo</p>
-          <p class="mc-pub__venue"><span>International Journal of Control</span><span class="mc-pub__year">2020</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">Fracture-Directed Steerable Needles
-            <span class="mc-pub__type">[J]</span></h4>
-          <p class="mc-pub__authors">Yang, Babaiasl, Swensen</p>
-          <p class="mc-pub__venue"><span>Journal of Medical Robotics Research</span><span class="mc-pub__year">2019</span></p>
-        </article>
-
-        <article class="mc-pub">
-          <h4 class="mc-pub__title">A Review of Technological and Clinical Aspects of
-            Robot-Aided Rehabilitation of the Upper Extremity After Stroke
-            <span class="mc-pub__type">[J]</span></h4>
-          <p class="mc-pub__authors">Babaiasl, Mahdioun, Jaryani, Yazdani</p>
-          <p class="mc-pub__venue"><span>Disability and Rehabilitation: Assistive Technology</span><span class="mc-pub__year">2016</span></p>
-        </article>
+    <div class="mc-pager" data-per-page="6">
+      <div class="mc-pager__head">
+        <h3 class="mc-collabel mc-collabel--blue" id="pubs-label">Publications</h3>
+        <!-- the arrows and the page count are inserted here by script, so a
+             visitor without JavaScript is never shown controls that do nothing -->
       </div>
+      <div class="mc-pager__viewport" aria-labelledby="pubs-label">
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">A Unified Multitask Cross-Modal Representation
+          Learning Method for Visual, Tactile, and Linguistic Grasping
+          <span class="mc-pub__type">[J]</span></h4>
+        <p class="mc-pub__authors">Yang, Babaiasl, Yang</p>
+        <p class="mc-pub__venue"><span>Information Fusion</span><span class="mc-pub__year">2026</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">NeuroCommitSSM: Decision-Centric Shared Autonomy
+          for Safe Assistive Manipulation via EEG, EMG, and Eye-Tracking Commit
+          Readiness <span class="mc-pub__type">[C]</span></h4>
+        <p class="mc-pub__authors">Sultan, Sangani, Cool, Sikorski, Liu, Akbarpour, Babaiasl</p>
+        <p class="mc-pub__venue"><span>IROS, accepted</span><span class="mc-pub__year">2026</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">A Multimodal Data Collection Framework for
+          Dialogue-Driven Assistive Robotics to Clarify Ambiguities: A
+          Wizard-of-Oz Pilot Study <span class="mc-pub__type">[C]</span></h4>
+        <p class="mc-pub__authors">Liu, Hawkins, Madden, Sultan, Esposito, Babaiasl</p>
+        <p class="mc-pub__venue"><span>BioRob, accepted</span><span class="mc-pub__year">2026</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">TriSaFeTrans: A Safety-Aware Multimodal Intent
+          Recognition Pipeline for Assistive Robotics
+          <span class="mc-pub__type">[C]</span></h4>
+        <p class="mc-pub__authors">Sultan, Cool, Liu, Tamilselvan, Babaiasl</p>
+        <p class="mc-pub__venue"><span>BioRob, accepted</span><span class="mc-pub__year">2026</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">WheelArm-Sim: A Manipulation and Navigation
+          Combined Multimodal Synthetic Data Generation Simulator for Unified
+          Control in Assistive Robotics <span class="mc-pub__type">[C]</span></h4>
+        <p class="mc-pub__authors">Liu, Sultan, Di Giorgio, Hawkins, Esposito, Babaiasl</p>
+        <p class="mc-pub__venue"><span>ISMR, accepted</span><span class="mc-pub__year">2026</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">NeuroFusion-Trans: A Transformer-Based EEG&ndash;EMG
+          Fusion Model for Assistive Robotics <span class="mc-pub__type">[J]</span></h4>
+        <p class="mc-pub__authors">Sultan, Liu, Sikorski, Alshathri, El-Shafai, Babaiasl</p>
+        <p class="mc-pub__venue"><span>IEEE Access</span><span class="mc-pub__year">2025</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">TransNN-MHA: A Transformer-Based Model to Distinguish
+          Real and Imaginary Motor Intent for Assistive Robotics
+          <span class="mc-pub__type">[J]</span></h4>
+        <p class="mc-pub__authors">Sultan, Liu, Sikorski, Babaiasl</p>
+        <p class="mc-pub__venue"><span>IEEE Access</span><span class="mc-pub__year">2025</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">Early Detection and Management of Crop Pests Using
+          Quadruped Robotic Systems: Challenges and Open Problems
+          <span class="mc-pub__type">[C]</span></h4>
+        <p class="mc-pub__authors">Camerota, Babaiasl, Shakoor, Esposito</p>
+        <p class="mc-pub__venue"><span>IEEE 101st Vehicular Technology Conference</span><span class="mc-pub__year">2025</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">Deployment of Large Language Models to Control
+          Mobile Robots at the Edge <span class="mc-pub__type">[C]</span></h4>
+        <p class="mc-pub__authors">Sikorski, Schrader, Yu, Billadeau, Meenakshi, Babaiasl</p>
+        <p class="mc-pub__venue"><span>International Conference on Mechatronics, Control and Robotics</span><span class="mc-pub__year">2025</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">Improving Robotic Arms Through Natural Language
+          Processing, Computer Vision, and Edge Computing
+          <span class="mc-pub__type">[C]</span></h4>
+        <p class="mc-pub__authors">Sikorski, Yu, Billadeau, Esposito, AliAkbarpour, Babaiasl</p>
+        <p class="mc-pub__venue"><span>International Conference on Mechatronics, Control and Robotics</span><span class="mc-pub__year">2025</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">EMG-TransNN-MHA: A Transformer-Based Model for
+          Enhanced Motor Intent Recognition in Assistive Robotics
+          <span class="mc-pub__type">[C]</span></h4>
+        <p class="mc-pub__authors">Aikkarakudiyil Joby, Sikorski, Sultan, Akbarpour, Esposito, Babaiasl</p>
+        <p class="mc-pub__venue"><span>IEEE International Conference on Big Data</span><span class="mc-pub__year">2024</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">Vision-Aided Screw-Theory-Based Inverse Kinematics
+          Control of a Robot Arm Using ROS 2 <span class="mc-pub__type">[J]</span></h4>
+        <p class="mc-pub__authors">Babaiasl, MacGavin, Montes Tolon, Roy</p>
+        <p class="mc-pub__venue"><span>Computer Vision News</span><span class="mc-pub__year">2024</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">Robotic Needle Steering: State of the Art and
+          Research Challenges <span class="mc-pub__type">[J]</span></h4>
+        <p class="mc-pub__authors">Babaiasl, Yang, Swensen</p>
+        <p class="mc-pub__venue"><span>Intelligent Service Robotics</span><span class="mc-pub__year">2022</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">Characterization and Modeling of a Thermoplastic
+          Elastomer Tissue Simulant Under Uniaxial Compression Loading
+          <span class="mc-pub__type">[J]</span></h4>
+        <p class="mc-pub__authors">Chen, Ding, Babaiasl, Yang, Swensen</p>
+        <p class="mc-pub__venue"><span>Journal of the Mechanical Behavior of Biomedical Materials</span><span class="mc-pub__year">2022</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">Resultant Radius of Curvature of Stylet-and-Tube
+          Steerable Needles <span class="mc-pub__type">[C]</span></h4>
+        <p class="mc-pub__authors">Yang, Babaiasl, Chen, Ding, Swensen</p>
+        <p class="mc-pub__venue"><span>IEEE/RSJ International Conference on Intelligent Robots and Systems</span><span class="mc-pub__year">2020</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">Fracture-Directed Waterjet Needle Steering: Design,
+          Modeling, and Path Planning <span class="mc-pub__type">[C]</span></h4>
+        <p class="mc-pub__authors">Babaiasl, Yang, Boccelli, Swensen</p>
+        <p class="mc-pub__venue"><span>IEEE RAS/EMBS International Conference for Biomedical Robotics and Biomechatronics</span><span class="mc-pub__year">2020</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">Predictive Mechanics-Based Model for Depth of Cut of
+          Waterjet in Soft Tissue <span class="mc-pub__type">[J]</span></h4>
+        <p class="mc-pub__authors">Babaiasl, Boccelli, Chen, Yang, Ding, Swensen</p>
+        <p class="mc-pub__venue"><span>Medical and Biological Engineering and Computing</span><span class="mc-pub__year">2020</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">Neural-Network-Based Asymptotic Tracking Control of
+          Unknown Nonlinear Systems with Continuous Control Command
+          <span class="mc-pub__type">[J]</span></h4>
+        <p class="mc-pub__authors">Jabbari Asl, Babaiasl, Narikiyo</p>
+        <p class="mc-pub__venue"><span>International Journal of Control</span><span class="mc-pub__year">2020</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">Fracture-Directed Steerable Needles
+          <span class="mc-pub__type">[J]</span></h4>
+        <p class="mc-pub__authors">Yang, Babaiasl, Swensen</p>
+        <p class="mc-pub__venue"><span>Journal of Medical Robotics Research</span><span class="mc-pub__year">2019</span></p>
+      </article>
+      <article class="mc-pub">
+        <h4 class="mc-pub__title">A Review of Technological and Clinical Aspects of
+          Robot-Aided Rehabilitation of the Upper Extremity After Stroke
+          <span class="mc-pub__type">[J]</span></h4>
+        <p class="mc-pub__authors">Babaiasl, Mahdioun, Jaryani, Yazdani</p>
+        <p class="mc-pub__venue"><span>Disability and Rehabilitation: Assistive Technology</span><span class="mc-pub__year">2016</span></p>
+      </article>
+      </div>
+    </div>
 
-      <!-- ================== honours, awards, and media ================== -->
-      <div>
-        <h3 class="mc-collabel mc-collabel--green">Honors, Awards, and Media</h3>
-
+    <h3 class="mc-collabel mc-collabel--green">Honors, Awards, and Media</h3>
+    <div class="mc-grid mc-grid--2">
+      <div class="mc-stack">
         <section class="mc-list">
           <h3 class="mc-list__head"><span>Grants and Fellowships</span></h3>
 
@@ -1001,8 +1046,42 @@ li:last-child{margin-bottom:0}
               Program for Women in STEM annual conference.</p>
           </div>
         </section>
+        <section class="mc-list">
+          <h3 class="mc-list__head"><span>Media Coverage</span></h3>
 
-        <section class="mc-list" style="margin-top:var(--mc-space-6)">
+          <div class="mc-award">
+            <span class="mc-award__meta">Apr 2022<br><span class="mc-chip mc-chip--media">Feature</span></span>
+            <p class="mc-award__body">A Day in the Life of a Robotics Engineer,
+              <a href="https://alltogether.swe.org/2022/04/a-day-in-the-life-of-robotics-engineer-madi-babaiasl/">Society
+              of Women Engineers blog</a>.</p>
+          </div>
+          <div class="mc-award">
+            <span class="mc-award__meta">Jan 2022<br><span class="mc-chip mc-chip--media">Feature</span></span>
+            <p class="mc-award__body">Women in Computer Vision,
+              <a href="https://www.rsipvision.com/women-in-computer-vision/">RSIP Vision
+              Magazine</a>.</p>
+          </div>
+          <div class="mc-award">
+            <span class="mc-award__meta">Aug 2019<br><span class="mc-chip mc-chip--media">Cover</span></span>
+            <p class="mc-award__body">Cover of the MME Department and the Robotics and
+              Autonomous Systems Initiative magazines at Washington State University.</p>
+          </div>
+          <div class="mc-award">
+            <span class="mc-award__meta">Jul 2019<br><span class="mc-chip mc-chip--media">Feature</span></span>
+            <p class="mc-award__body">Steerable needle research in
+              <a href="https://news.wsu.edu/news/2019/07/25/cutting-edge-needles-promise-accuracy-medical-procedures/">WSU
+              Insider</a>.</p>
+          </div>
+          <div class="mc-award">
+            <span class="mc-award__meta">Feb 2018<br><span class="mc-chip mc-chip--media">Feature</span></span>
+            <p class="mc-award__body">Steerable needle research in the
+              <a href="https://dailyevergreen.com/26111/news/researchers-develop-new-needle/">Daily
+              Evergreen</a>.</p>
+          </div>
+        </section>
+      </div>
+      <div class="mc-stack">
+        <section class="mc-list">
           <h3 class="mc-list__head"><span>Awards and Honors</span></h3>
 
           <div class="mc-award">
@@ -1041,42 +1120,7 @@ li:last-child{margin-bottom:0}
               Vision Magazine.</p>
           </div>
         </section>
-
-        <section class="mc-list" style="margin-top:var(--mc-space-6)">
-          <h3 class="mc-list__head"><span>Media Coverage</span></h3>
-
-          <div class="mc-award">
-            <span class="mc-award__meta">Apr 2022<br><span class="mc-chip mc-chip--media">Feature</span></span>
-            <p class="mc-award__body">A Day in the Life of a Robotics Engineer,
-              <a href="https://alltogether.swe.org/2022/04/a-day-in-the-life-of-robotics-engineer-madi-babaiasl/">Society
-              of Women Engineers blog</a>.</p>
-          </div>
-          <div class="mc-award">
-            <span class="mc-award__meta">Jan 2022<br><span class="mc-chip mc-chip--media">Feature</span></span>
-            <p class="mc-award__body">Women in Computer Vision,
-              <a href="https://www.rsipvision.com/women-in-computer-vision/">RSIP Vision
-              Magazine</a>.</p>
-          </div>
-          <div class="mc-award">
-            <span class="mc-award__meta">Aug 2019<br><span class="mc-chip mc-chip--media">Cover</span></span>
-            <p class="mc-award__body">Cover of the MME Department and the Robotics and
-              Autonomous Systems Initiative magazines at Washington State University.</p>
-          </div>
-          <div class="mc-award">
-            <span class="mc-award__meta">Jul 2019<br><span class="mc-chip mc-chip--media">Feature</span></span>
-            <p class="mc-award__body">Steerable needle research in
-              <a href="https://news.wsu.edu/news/2019/07/25/cutting-edge-needles-promise-accuracy-medical-procedures/">WSU
-              Insider</a>.</p>
-          </div>
-          <div class="mc-award">
-            <span class="mc-award__meta">Feb 2018<br><span class="mc-chip mc-chip--media">Feature</span></span>
-            <p class="mc-award__body">Steerable needle research in the
-              <a href="https://dailyevergreen.com/26111/news/researchers-develop-new-needle/">Daily
-              Evergreen</a>.</p>
-          </div>
-        </section>
-
-        <section class="mc-list" style="margin-top:var(--mc-space-6)">
+        <section class="mc-list">
           <h3 class="mc-list__head"><span>Earlier Honors</span></h3>
 
           <div class="mc-award">
@@ -1112,7 +1156,6 @@ li:last-child{margin-bottom:0}
     </div>
   </section>
 
-  <!-- ============================== TALKS ============================== -->
   <section id="talks" aria-labelledby="talks-h">
     <h2 class="mc-section-heading" id="talks-h">Invited Talks and Presentations</h2>
 
@@ -1350,6 +1393,152 @@ li:last-child{margin-bottom:0}
     if (e.matches) {
       targets.forEach(function (el) { el.classList.add('is-in'); });
     }
+  });
+})();
+</script>
+
+<script>
+/* Pager for the publications grid. Progressive enhancement: if this never
+   runs, every entry is already on the page and no dead controls are shown. */
+(function () {
+  var pager = document.querySelector('.mc-pager');
+  if (!pager) { return; }
+  var viewport = pager.querySelector('.mc-pager__viewport');
+  var head = pager.querySelector('.mc-pager__head');
+  var items = Array.prototype.slice.call(viewport.children);
+  var per = parseInt(pager.getAttribute('data-per-page'), 10) || 6;
+  if (items.length <= per) { return; }
+
+  var pages = Math.ceil(items.length / per);
+  var page = 0;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ---- controls ---- */
+  var controls = document.createElement('div');
+  controls.className = 'mc-pager__controls';
+
+  function arrow(dir, label) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'mc-pager__btn';
+    b.setAttribute('aria-label', label);
+    b.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" ' +
+      'aria-hidden="true" stroke="currentColor" stroke-width="2" ' +
+      'stroke-linecap="round" stroke-linejoin="round"><path d="' +
+      (dir < 0 ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6') + '"/></svg>';
+    b.addEventListener('click', function () { go(page + dir); });
+    return b;
+  }
+
+  var prev = arrow(-1, 'Previous publications');
+  var next = arrow(1, 'Next publications');
+  /* No visible counter. A screen reader still needs to know the move
+     happened, so the announcement lives in an off-screen status line. */
+  var count = document.createElement('p');
+  count.className = 'mc-pager__count mc-visually-hidden';
+  count.setAttribute('role', 'status');
+  count.setAttribute('aria-live', 'polite');
+
+  controls.appendChild(prev);
+  controls.appendChild(next);
+  controls.appendChild(count);
+  head.appendChild(controls);
+
+  /* ---- keep the block from resizing between pages ----
+     Measured once, after layout, from the tallest page. Without this the
+     section jumps every time an arrow is pressed. */
+  function lockHeight() {
+    viewport.style.minHeight = '';
+    var tallest = 0;
+    for (var p = 0; p < pages; p++) {
+      show(p, true);
+      tallest = Math.max(tallest, viewport.offsetHeight);
+    }
+    show(page, true);
+    viewport.style.minHeight = tallest + 'px';
+  }
+
+  function show(p, silent) {
+    items.forEach(function (el, i) {
+      el.hidden = Math.floor(i / per) !== p;
+    });
+    if (!silent) {
+      count.textContent = 'Publications, page ' + (p + 1) + ' of ' + pages + '.';
+      prev.disabled = p === 0;
+      next.disabled = p === pages - 1;
+    }
+  }
+
+  function go(p) {
+    if (p < 0 || p > pages - 1 || p === page) { return; }
+    page = p;
+    if (reduced.matches) {
+      show(page);
+      return;
+    }
+    viewport.classList.add('is-turning');
+    window.requestAnimationFrame(function () {
+      show(page);
+      window.requestAnimationFrame(function () {
+        viewport.classList.remove('is-turning');
+      });
+    });
+  }
+
+  /* ---- arrow keys move between pages when focus is inside the block ---- */
+  pager.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') { go(page - 1); }
+    if (e.key === 'ArrowRight') { go(page + 1); }
+  });
+
+  show(0);
+  count.textContent = 'Publications, page 1 of ' + pages + '.';
+  prev.disabled = true;
+
+  if (document.readyState === 'complete') { lockHeight(); }
+  else { window.addEventListener('load', lockHeight); }
+
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(lockHeight, 200);
+  }, { passive: true });
+})();
+</script>
+
+<script>
+/* Photographs are hotlinked from GitHub, which throttles and occasionally
+   drops a request. Retry once, then remove the image rather than leave a
+   broken icon with a paragraph of alt text sprawling across the card. */
+(function () {
+  var imgs = document.querySelectorAll('.mc-figure img, .mc-hero__band img');
+
+  Array.prototype.forEach.call(imgs, function (img) {
+    var attempts = 0;
+    var original = img.getAttribute('src');
+
+    function drop() {
+      img.classList.add('is-failed');
+      var fig = img.closest('figure');
+      if (fig && !fig.querySelector('img:not(.is-failed)')) {
+        fig.classList.add('is-empty');
+      }
+    }
+
+    function onError() {
+      attempts++;
+      if (attempts === 1) {
+        window.setTimeout(function () {
+          img.src = original + (original.indexOf('?') === -1 ? '?r=1' : '&r=1');
+        }, 900);
+        return;
+      }
+      drop();
+    }
+
+    img.addEventListener('error', onError);
+    /* an image that already failed before this script parsed */
+    if (img.complete && img.naturalWidth === 0) { onError(); }
   });
 })();
 </script>

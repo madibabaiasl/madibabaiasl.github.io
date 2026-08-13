@@ -58,6 +58,7 @@
   --mc-thumb-size: 72px;
 
   /* EXTENSIONS for the hero sequence. Declared in the conformance report. */
+  --mc-thumb-w: 192px;   /* video cover width; the system token is a 72px square */
   --mc-ease: cubic-bezier(.22, .61, .36, 1); /* single easing for every beat */
   --mc-stagger: 55ms;                        /* ledger and pill interval */
 }
@@ -311,10 +312,14 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
 .mc-row:hover .mc-row__title{color:var(--mc-indigo-500)}
 .mc-row__meta{display:block;margin-top:var(--mc-space-2);
   font-size:var(--mc-size-meta);color:var(--mc-text-muted)}
-.mc-row__thumb{flex:0 0 var(--mc-thumb-size);width:var(--mc-thumb-size);
-  height:var(--mc-thumb-size);object-fit:cover;border-radius:var(--mc-radius-thumb);
+/* Video covers are 16:9, matching the source frame. The old 72px square
+   cropped a widescreen still to its centre, which is why they read as
+   unidentifiable grey blocks. */
+.mc-row__thumb{flex:0 0 var(--mc-thumb-w);width:var(--mc-thumb-w);
+  aspect-ratio:16/9;height:auto;object-fit:cover;border-radius:var(--mc-radius-thumb);
   background:var(--mc-lavender)}
-@media (max-width:480px){.mc-row__thumb{--mc-thumb-size:56px}}
+@media (max-width:1024px){.mc-row__thumb{--mc-thumb-w:160px}}
+@media (max-width:480px){.mc-row__thumb{--mc-thumb-w:124px}}
 
 /* ======================= column labels ======================= */
 .mc-collabel{display:flex;align-items:center;gap:var(--mc-space-3);
@@ -533,21 +538,21 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
             <span class="mc-row__title">Assistive robot arm controlled through natural language</span>
             <span class="mc-row__meta">Mecharithm Lab, Saint Louis University</span>
           </span>
-          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/4OEUAqdN7MM/mqdefault.jpg" alt="">
+          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/4OEUAqdN7MM/hqdefault.jpg" alt="">
         </a>
         <a class="mc-row" href="https://www.youtube.com/watch?v=zHunM45R7AU">
           <span class="mc-row__text">
             <span class="mc-row__title">WheelArm: manipulation and navigation on a wheelchair-mounted platform</span>
             <span class="mc-row__meta">Undergraduate research, FIRE Grant project</span>
           </span>
-          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/zHunM45R7AU/mqdefault.jpg" alt="">
+          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/zHunM45R7AU/hqdefault.jpg" alt="">
         </a>
         <a class="mc-row" href="https://www.youtube.com/watch?v=HGY9q5K14ZI">
           <span class="mc-row__text">
             <span class="mc-row__title">Vision-aided inverse kinematics control with ROS 2</span>
             <span class="mc-row__meta">Screw-theory based control demonstration</span>
           </span>
-          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/HGY9q5K14ZI/mqdefault.jpg" alt="">
+          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/HGY9q5K14ZI/hqdefault.jpg" alt="">
         </a>
       </section>
   </section>
@@ -656,21 +661,21 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
             <span class="mc-row__title">Waterjet needle steering system</span>
             <span class="mc-row__meta">Design, modeling, and path planning</span>
           </span>
-          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/g72HpFUgyKY/mqdefault.jpg" alt="">
+          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/g72HpFUgyKY/hqdefault.jpg" alt="">
         </a>
         <a class="mc-row" href="https://www.youtube.com/watch?v=ldkkqJhiHrU">
           <span class="mc-row__text">
             <span class="mc-row__title">Duty cycling to improve steerability and radius of curvature</span>
             <span class="mc-row__meta">International Symposium on Medical Robotics</span>
           </span>
-          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/ldkkqJhiHrU/mqdefault.jpg" alt="">
+          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/ldkkqJhiHrU/hqdefault.jpg" alt="">
         </a>
         <a class="mc-row" href="https://www.youtube.com/watch?v=K1LWyjnKlIA">
           <span class="mc-row__text">
             <span class="mc-row__title">Predicting depth of cut of a waterjet in soft tissue</span>
             <span class="mc-row__meta">Finite element analysis and experiment</span>
           </span>
-          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/K1LWyjnKlIA/mqdefault.jpg" alt="">
+          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/K1LWyjnKlIA/hqdefault.jpg" alt="">
         </a>
       </section>
     </div>
@@ -801,35 +806,35 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
             <span class="mc-row__title">Modern robotics lecture series</span>
             <span class="mc-row__meta">Full-course playlist</span>
           </span>
-          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/dDODrSy6cYU/mqdefault.jpg" alt="">
+          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/dDODrSy6cYU/hqdefault.jpg" alt="">
         </a>
         <a class="mc-row" href="https://www.youtube.com/watch?v=nesfZWPoh1I&amp;list=PLlqdnFs9xNwpD9zJr8BgAbfHH3AyixTqt">
           <span class="mc-row__text">
             <span class="mc-row__title">Mechatronic system design</span>
             <span class="mc-row__meta">Full-course playlist</span>
           </span>
-          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/nesfZWPoh1I/mqdefault.jpg" alt="">
+          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/nesfZWPoh1I/hqdefault.jpg" alt="">
         </a>
         <a class="mc-row" href="https://www.youtube.com/watch?v=6C7T3iIX67c&amp;list=PLlqdnFs9xNwrElyA7Amf3xS8_w96FGLCD">
           <span class="mc-row__text">
             <span class="mc-row__title">Screw theory and robot kinematics</span>
             <span class="mc-row__meta">Topic playlist</span>
           </span>
-          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/6C7T3iIX67c/mqdefault.jpg" alt="">
+          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/6C7T3iIX67c/hqdefault.jpg" alt="">
         </a>
         <a class="mc-row" href="https://www.youtube.com/watch?v=MyqjZJ7YmFg&amp;list=PLlqdnFs9xNwrQv_R-rjknUULTcho517zU">
           <span class="mc-row__text">
             <span class="mc-row__title">ROS and robot programming</span>
             <span class="mc-row__meta">Topic playlist</span>
           </span>
-          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/MyqjZJ7YmFg/mqdefault.jpg" alt="">
+          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/MyqjZJ7YmFg/hqdefault.jpg" alt="">
         </a>
         <a class="mc-row" href="https://www.youtube.com/watch?v=yADlxGz6nGE&amp;list=PLlqdnFs9xNwrAV19_HN0itHVKy09uR7dV">
           <span class="mc-row__text">
             <span class="mc-row__title">Student projects and lab demonstrations</span>
             <span class="mc-row__meta">Topic playlist</span>
           </span>
-          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/yADlxGz6nGE/mqdefault.jpg" alt="">
+          <img class="mc-row__thumb" loading="lazy" src="https://img.youtube.com/vi/yADlxGz6nGE/hqdefault.jpg" alt="">
         </a>
       </section>
     </div>

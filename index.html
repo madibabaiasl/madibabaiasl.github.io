@@ -327,6 +327,8 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
   text-transform:uppercase;margin:0 0 var(--mc-space-6)}
 .mc-collabel::before{content:"";width:24px;height:2px;background:currentColor;flex:none}
 .mc-collabel--blue{color:var(--mc-blue)}
+/* unused since the recognition label was matched to Publications;
+   swap the class back on that heading to restore the pairing */
 .mc-collabel--green{color:var(--mc-green-text)}
 
 
@@ -991,7 +993,7 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       </div>
     </div>
 
-    <h3 class="mc-collabel mc-collabel--green">Honors, Awards, and Media</h3>
+    <h3 class="mc-collabel mc-collabel--blue">Honors, Awards, and Media</h3>
     <div class="mc-grid mc-grid--2">
       <div class="mc-stack">
         <section class="mc-list">

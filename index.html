@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <style>
-
 :root {
   /* color */
   --mc-indigo-900: #1E1866; /* primary headings, nav labels, body emphasis */
@@ -52,13 +51,11 @@
   --mc-leading-body: 1.6;
   --mc-section-gap: 80px;
   --mc-thumb-size: 72px;
-
   /* EXTENSIONS for the hero sequence. Declared in the conformance report. */
   --mc-thumb-w: 192px;   /* video cover width; the system token is a 72px square */
   --mc-ease: cubic-bezier(.22, .61, .36, 1); /* single easing for every beat */
   --mc-stagger: 55ms;                        /* ledger and pill interval */
 }
-
 /* ============================ base ============================ */
 *,*::before,*::after{box-sizing:border-box}
 img{max-width:100%}
@@ -78,7 +75,6 @@ a{color:var(--mc-indigo-500)}
 ul{margin:0;padding-inline-start:1.15em}
 li{margin-bottom:var(--mc-space-3)}
 li:last-child{margin-bottom:0}
-
 /* ---- accessibility floor, keep in every deliverable ---- */
 :focus-visible{outline:2px solid var(--mc-indigo-900);outline-offset:2px;border-radius:2px}
 [hidden]{display:none!important}
@@ -90,7 +86,6 @@ li:last-child{margin-bottom:0}
 .mc-skip:focus{top:var(--mc-space-4)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}}
-
 /* ==================== secondary category strip ==================== */
 /* The strip stays put. It is the only navigation on the page, so on a document
    this long it has to remain reachable without a return trip to the top. */
@@ -111,7 +106,6 @@ li:last-child{margin-bottom:0}
   text-decoration:underline;text-decoration-color:var(--mc-amber);
   text-underline-offset:8px;text-decoration-thickness:2px}
 .mc-strip__rule{width:1px;height:20px;background:var(--mc-hairline);flex:none}
-
 /* ============================ hero ============================ */
 /* Composition: text and a fact ledger side by side, link pills beneath,
    then the team photograph as a full-bleed band clipped to the panel radius.
@@ -131,15 +125,12 @@ li:last-child{margin-bottom:0}
    lands near 80 characters rather than the 95 it would reach at 17px. */
 .mc-hero__lead{margin:var(--mc-space-8) 0 0;font-size:1.25rem;line-height:1.55;
   color:var(--mc-indigo-700)}
-
-
 .mc-hero__foot{display:flex;justify-content:space-between;align-items:flex-end;
   gap:var(--mc-space-6);flex-wrap:wrap;
   padding:0 var(--mc-space-12) var(--mc-space-8)}
 .mc-hero__credit{margin:0;font-size:var(--mc-size-meta);color:var(--mc-indigo-700)}
 .mc-hero__band{margin:0}
 .mc-hero__band img{display:block;width:100%;height:auto}
-
 .mc-links{display:flex;flex-wrap:wrap;gap:var(--mc-space-2);
   margin:0;padding:0;list-style:none}
 .mc-links li{margin:0}
@@ -147,14 +138,12 @@ li:last-child{margin-bottom:0}
   background:var(--mc-surface);border-radius:var(--mc-radius-pill);
   font-size:.9375rem;font-weight:600;color:var(--mc-indigo-900);text-decoration:none}
 .mc-links a:hover{color:var(--mc-indigo-500)}
-
 @media (max-width:768px){
   .mc-hero__inner{padding:var(--mc-space-12) var(--mc-space-6) var(--mc-space-6)}
   .mc-hero__lead{font-size:1.0625rem}
   .mc-hero__foot{padding:0 var(--mc-space-6) var(--mc-space-6)}
   main > section{margin-block:48px}
 }
-
 /* ========================= photo figures ========================= */
 .mc-figure{margin:0 0 var(--mc-space-6);background:var(--mc-surface);
   border-radius:var(--mc-radius-card);padding:var(--mc-space-3);
@@ -169,17 +158,13 @@ li:last-child{margin-bottom:0}
 .mc-figure img + img{margin-top:var(--mc-space-3)}
 .mc-figure figcaption{font-size:var(--mc-size-meta);color:var(--mc-text-muted);
   padding:var(--mc-space-3) var(--mc-space-2) var(--mc-space-1)}
-
-
 /* ===================== hero entrance sequence =====================
    One shot, about 1.85s, then the page is inert. Only transform, opacity,
    and clip-path are animated, so nothing reflows and nothing shifts.
-
    The whole block sits inside prefers-reduced-motion: no-preference. The
    resting state of every element is therefore its finished state, which is
    what a reduced-motion visitor sees. Writing it the other way round is the
    usual cause of a hero that stays blank for those users.
-
    Total duration is under the five seconds at which WCAG 2.2 SC 2.2.2 would
    require a pause control, and the sequence does not loop, so no control is
    needed. */
@@ -193,22 +178,17 @@ li:last-child{margin-bottom:0}
    corners, and a rounded clip would round the top two as well */
 @keyframes mc-sweep{from{clip-path:inset(0 100% 0 0)}
                     to{clip-path:inset(0)}}
-
 @media (prefers-reduced-motion:no-preference){
   /* 1. the professorship line lifts in */
   .mc-hero__eyebrow{animation:mc-rise 380ms var(--mc-ease) both}
-
   /* 2. the name is set left to right rather than faded, so it reads as type
         being placed instead of a page still loading */
   .mc-hero h1{animation:mc-set 460ms var(--mc-ease) 120ms both}
-
   /* 3. the rule under the name draws itself. The underline is the system's
         signature device, so the sequence uses the system's own grammar */
   .mc-hero h1::after{animation:mc-draw 340ms var(--mc-ease) 540ms both}
-
   /* 4. supporting copy */
   .mc-hero__lead{animation:mc-rise 420ms var(--mc-ease) 300ms both}
-
   /* 5. the profile links deal in, inheriting the interval the ledger rows used */
   .mc-links li{animation:mc-rise 300ms var(--mc-ease) both}
   .mc-links li:nth-child(1){animation-delay:calc(560ms + 0 * var(--mc-stagger))}
@@ -218,13 +198,11 @@ li:last-child{margin-bottom:0}
   .mc-links li:nth-child(5){animation-delay:calc(560ms + 4 * var(--mc-stagger))}
   .mc-links li:nth-child(6){animation-delay:calc(560ms + 5 * var(--mc-stagger))}
   .mc-hero__credit{animation:mc-rise 300ms var(--mc-ease) 840ms both}
-
   /* 6. the closing beat. The team photograph is uncovered left to right, so
         the group is introduced person by person rather than fading in as a
         block. This is the only slow move in the sequence. */
   .mc-hero__band{animation:mc-sweep 900ms var(--mc-ease) 940ms both}
 }
-
 /* ======================= section heading ======================= */
 .mc-section-heading{position:relative;text-align:center;font-size:var(--mc-size-h2);
   font-weight:700;color:var(--mc-indigo-700);margin:0 auto var(--mc-space-3);
@@ -233,14 +211,11 @@ li:last-child{margin-bottom:0}
   height:2px;background:currentColor;transform-origin:center}
 .mc-section-note{text-align:center;color:var(--mc-text-muted);
   margin:0 auto var(--mc-space-8);max-width:70ch}
-
-
 /* ==================== scroll-entry motion ====================
    Everything below is opt-in. The reveal classes are added by script only
    when the visitor has not asked for reduced motion, so the resting document
    is the finished one: no script, no motion preference, or a failed request
    all leave the page fully visible. Nothing here animates twice.
-
    The gesture is deliberately the same one used in the hero. Blocks rise a
    short distance, and section rules draw themselves from the centre. Reusing
    two moves across the whole page reads as a system; inventing a new move per
@@ -249,19 +224,16 @@ li:last-child{margin-bottom:0}
   .mc-reveal{opacity:0;transform:translateY(12px);
     transition:opacity 500ms var(--mc-ease), transform 500ms var(--mc-ease)}
   .mc-reveal.is-in{opacity:1;transform:none}
-
   /* the centred rule under each section heading draws outward, echoing the
      left-to-right draw under the name in the hero */
   .mc-reveal-rule::after{transform:scaleX(0);
     transition:transform 420ms var(--mc-ease) 120ms}
   .mc-reveal-rule.is-in::after{transform:scaleX(1)}
-
   /* cards in a row arrive in sequence rather than together. Capped at four
      steps so a long column never turns into a slow cascade. */
   .mc-reveal[data-i="1"]{transition-delay:70ms}
   .mc-reveal[data-i="2"]{transition-delay:140ms}
   .mc-reveal[data-i="3"]{transition-delay:210ms}
-
   /* pointer feedback. Two pixels, and only where something is clickable. */
   .mc-links a{transition:transform 160ms var(--mc-ease), color 160ms var(--mc-ease)}
   .mc-links a:hover{transform:translateY(-2px)}
@@ -271,7 +243,6 @@ li:last-child{margin-bottom:0}
   a.mc-row:hover .mc-row__thumb{transform:scale(1.04)}
   .mc-strip a{transition:color 160ms var(--mc-ease)}
 }
-
 /* ==================== grid, cards, list rows ==================== */
 /* Cards that sit beside each other end on the same line. Figures are the
    exception: stretching one would add dead white space under the caption. */
@@ -279,7 +250,6 @@ li:last-child{margin-bottom:0}
 .mc-grid > .mc-figure,
 .mc-grid > .mc-stack{align-self:start}
 .mc-grid > .mc-list{height:100%}
-
 /* Vertical rhythm between the blocks of a section. Adjacent margins collapse,
    so these set a floor of 24px without adding to the 32px already below a
    section note. Before this, a figure placed after a grid touched it. */
@@ -316,7 +286,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
   background:var(--mc-lavender)}
 @media (max-width:1024px){.mc-row__thumb{--mc-thumb-w:160px}}
 @media (max-width:480px){.mc-row__thumb{--mc-thumb-w:124px}}
-
 /* ======================= column labels ======================= */
 .mc-collabel{display:flex;align-items:center;gap:var(--mc-space-3);
   font-size:var(--mc-size-label);font-weight:700;letter-spacing:.08em;
@@ -326,8 +295,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
 /* unused since the recognition label was matched to Publications;
    swap the class back on that heading to restore the pairing */
 .mc-collabel--green{color:var(--mc-green-text)}
-
-
 /* ============================== pager ==============================
    Six publications at a time in two columns, paged by arrow. Without the
    script the viewport simply shows all twenty, which is a longer page but a
@@ -339,7 +306,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
 .mc-pager__viewport{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   gap:var(--mc-space-4);align-content:start}
 .mc-pager__viewport .mc-pub{margin-bottom:0}
-
 .mc-pager__controls{display:flex;align-items:center;gap:var(--mc-space-3);
   margin-bottom:var(--mc-space-8)}
 .mc-pager__btn{display:grid;place-items:center;width:40px;height:40px;padding:0;
@@ -350,7 +316,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
   border-color:var(--mc-indigo-900)}
 .mc-pager__btn:disabled{color:var(--mc-text-muted);border-color:var(--mc-hairline);
   cursor:default}
-
 @media (prefers-reduced-motion:no-preference){
   /* the incoming page rises the same 12px used everywhere else on the page */
   .mc-pager__viewport.is-turning .mc-pub{opacity:0;transform:translateY(12px);
@@ -361,11 +326,27 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     border-color 160ms var(--mc-ease), transform 160ms var(--mc-ease)}
   .mc-pager__btn:hover:not(:disabled){transform:translateY(-2px)}
 }
-
 @media (max-width:768px){
   .mc-pager__viewport{grid-template-columns:1fr}
 }
-
+/* ==================== paged award list ====================
+   The same contract as the publications pager, applied to a single award
+   card: entries show a page at a time, arrows inserted by script only, so
+   a visitor without JavaScript sees the complete list and no dead controls.
+   The buttons reuse .mc-pager__btn; only the size is new. */
+.mc-list__controls{display:flex;justify-content:flex-end;align-items:center;
+  gap:var(--mc-space-3);margin:0 0 var(--mc-space-2)}
+.mc-pager__btn--sm{width:32px;height:32px}
+/* paging hides whole rows with [hidden]; the first visible row of a page
+   must not keep the divider it inherited from a now-hidden neighbour */
+.mc-award[hidden] + .mc-award{border-top:0}
+@media (prefers-reduced-motion:no-preference){
+  /* the incoming page rises the same 12px used everywhere else */
+  .mc-list--paged .mc-award{transition:opacity 320ms var(--mc-ease),
+    transform 320ms var(--mc-ease)}
+  .mc-list--paged.is-turning .mc-award{opacity:0;transform:translateY(12px);
+    transition:none}
+}
 /* ==================== publication entries ==================== */
 .mc-pub{background:var(--mc-lavender-50);border-radius:var(--mc-radius-card);
   padding:var(--mc-space-6);margin-bottom:var(--mc-space-4)}
@@ -377,7 +358,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
 .mc-pub__venue{display:flex;justify-content:space-between;gap:var(--mc-space-4);
   font-size:var(--mc-size-meta);color:var(--mc-text-muted);margin:0}
 .mc-pub__year{flex:none}
-
 /* ======================== award entries ======================== */
 .mc-award{display:flex;gap:var(--mc-space-4);padding:var(--mc-space-4) 0}
 .mc-award + .mc-award{border-top:1px solid var(--mc-hairline)}
@@ -388,13 +368,11 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
   .mc-award{flex-direction:column;gap:var(--mc-space-1)}
   .mc-award__meta{flex:none}
 }
-
 /* ========================= status chip ========================= */
 .mc-chip{display:inline-block;padding:var(--mc-space-1) var(--mc-space-3);
   border-radius:var(--mc-radius-pill);font-size:var(--mc-size-meta);font-weight:600}
 .mc-chip--funding{background:#FEF8EE;color:var(--mc-amber-text)}
 .mc-chip--media{background:#DFF0E4;color:var(--mc-green-text)}
-
 /* ============================ footer ============================ */
 .mc-footer{background:var(--mc-footer);color:var(--mc-surface);
   padding:var(--mc-space-16) var(--mc-space-6);margin-top:var(--mc-section-gap)}
@@ -412,7 +390,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
 .mc-footer a{color:var(--mc-surface);text-decoration:none}
 .mc-footer a:hover{text-decoration:underline}
 .mc-footer__links{display:flex;gap:var(--mc-space-6);flex-wrap:wrap}
-
 /* ========================= breakpoints ========================= */
 @media (max-width:1024px){
   .mc-grid--2{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -426,7 +403,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
 </head>
 <body>
 <a class="mc-skip" href="#main">Skip to content</a>
-
 <!-- ======================= SECTION STRIP ======================= -->
 <nav class="mc-strip" aria-label="Sections">
   <div class="mc-strip__inner">
@@ -441,24 +417,19 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     <a href="#talks">Talks</a>
   </div>
 </nav>
-
 <main id="main" class="mc-container">
-
   <!-- ============================= HERO ============================= -->
   <section class="mc-hero" aria-labelledby="hero-title">
     <div class="mc-hero__inner">
       <p class="mc-hero__eyebrow">Clare Boothe Luce Assistant Professor of Robotics and Autonomous Systems</p>
       <h1 id="hero-title">Madi Dian, Ph.D.</h1>
       <p class="mc-hero__lead">I direct the Mecharithm Lab in the Aerospace and Mechanical Engineering Department at Saint Louis University,
-        where we work on physical AI for human-robot teaming. 
+        where we work on physical AI for human-robot teaming.
       The current focus is conversational vision-language-action models that turn ordinary spoken instructions into safe mobile manipulation, multimodal intent decoding from EEG, EMG,
       and eye tracking so a robot can infer what a person wants and when they are ready to commit to it. We also work on haptics in teleoperation, robot learning from human demonstrations
       and digital twins for robot learning.
       A parallel line of work asks how robotics, mechatronics, and artificial intelligence should be taught.</p>
     </div>
-
-
-
     <div class="mc-hero__foot">
       <ul class="mc-links">
         <li><a href="https://mecharithmlab.com">Lab Website</a></li>
@@ -469,25 +440,21 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         <li><a href="https://user-images.githubusercontent.com/118206851/253661708-75838c19-daee-4fa3-be33-d1f536e7ce35.jpeg">Academic Genealogy</a></li>
       </ul>
     </div>
-
     <figure class="mc-hero__band">
       <img src="https://github.com/user-attachments/assets/eb6e9e9e-fdb9-4298-a6dc-b26ae72ae81b"
            width="2556" height="780" decoding="async"
            alt="The Mecharithm Lab team at Saint Louis University with their robots.">
     </figure>
   </section>
-
   <!-- ========================= CURRENT RESEARCH ========================= -->
   <section id="research" aria-labelledby="research-h">
     <h2 class="mc-section-heading" id="research-h">Current Research</h2>
     <p class="mc-section-note">AI models and robots that team with people in the physical world. Full project details are on the
       <a href="https://mecharithmlab.com/">lab website</a>.</p>
-
     <figure class="mc-figure">
       <img src="https://github.com/user-attachments/assets/6958f433-5993-4960-b84b-afaa7fd3865b" width="3746" height="2236" loading="lazy" decoding="async" alt="Projects from the Mecharithm Lab, including assistive manipulation, agricultural robotics, and course hardware.">
       <figcaption>Some of the projects in the Mecharithm Lab at Saint Louis University.</figcaption>
     </figure>
-
         <div class="mc-grid mc-grid--2">
       <section class="mc-list">
         <h3 class="mc-list__head"><span>Research Focus</span></h3>
@@ -502,11 +469,9 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
           and produces open course materials and interactive companions used well beyond one classroom.</p>
           <p>This work draws on robotics, machine learning, control theory, artificial intelligence, computer vision,
           digital twins and game development, psychology, physical therapy, agriculture, and education.</p>
-          
+
         </div>
       </section>
-
-           
 
       <section class="mc-list">
         <h3 class="mc-list__head"><span>Active Threads</span></h3>
@@ -517,16 +482,14 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
             <li><strong>Intent recognition.</strong> Transformer models over EEG, EMG, eye tracking, and speech that separate real movement intent from imagined intent.</li>
             <li><strong>Shared autonomy.</strong> Commit-readiness models that judge whether a person has settled on an action before the robot commits to it.</li>
             <li><strong>Learning from human video.</strong>Pipelines that re-render recorded human demonstrations in a robot's own embodiment, so policies trained on them move the way people do.</li>
-            <li><strong>Digital twins and haptic teleoperation.</strong> Simulated testbeds where a policy is rehearsed before it reaches hardware, and force feedback that gives 
+            <li><strong>Digital twins and haptic teleoperation.</strong> Simulated testbeds where a policy is rehearsed before it reaches hardware, and force feedback that gives
               a remote operator the feel of contact.</li>
-            <li><strong>Robotics and AI education.</strong>Open course material on screw-theory kinematics, modern robotics, and mechatronic system design, 
+            <li><strong>Robotics and AI education.</strong>Open course material on screw-theory kinematics, modern robotics, and mechatronic system design,
               with interactive companions used well beyond one classroom.</li>
           </ul>
         </div>
       </section>
     </div>
-
-
       <section class="mc-list">
         <h3 class="mc-list__head">
           <span>Research Videos</span>
@@ -556,12 +519,10 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         </a>
       </section>
   </section>
-
   <!-- ========================== JOINING THE LAB ========================== -->
   <section id="join" aria-labelledby="join-h">
     <h2 class="mc-section-heading" id="join-h">Joining the Lab</h2>
     <p class="mc-section-note">Open positions are also advertised through LinkedIn.</p>
-
     <div class="mc-grid mc-grid--2">
       <div class="mc-stack">
         <section class="mc-list">
@@ -578,7 +539,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
               publications, a website, or a GitHub page where applicable.</p>
           </div>
         </section>
-
         <section class="mc-list">
           <h3 class="mc-list__head"><span>Writing a Useful Email</span></h3>
           <div class="mc-list__body">
@@ -593,7 +553,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
           </div>
         </section>
       </div>
-
       <section class="mc-list">
         <h3 class="mc-list__head"><span>Skills and Qualities</span></h3>
         <div class="mc-list__body">
@@ -621,18 +580,15 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       </section>
     </div>
   </section>
-
   <!-- ========================= DOCTORAL RESEARCH ========================= -->
   <section id="phd" aria-labelledby="phd-h">
     <h2 class="mc-section-heading" id="phd-h">Doctoral Research</h2>
     <p class="mc-section-note">Fracture-directed steerable needles, Washington State
       University, advised by Prof. John P. Swensen.</p>
-
     <figure class="mc-figure">
       <img src="https://user-images.githubusercontent.com/118206851/201805805-b4278371-fb39-470c-9600-d92743afeb96.jpg" width="3923" height="1892" loading="lazy" decoding="async" alt="Waterjet steerable needle apparatus and experimental results.">
       <figcaption>Waterjet needle steering: apparatus, tissue simulant experiments, and measured trajectories.</figcaption>
     </figure>
-
         <div class="mc-grid mc-grid--2">
       <section class="mc-list">
         <h3 class="mc-list__head"><span>Fracture-Directed Steerable Needles</span></h3>
@@ -648,7 +604,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
             steerable needles</a> (US 11,103,278).</p>
         </div>
       </section>
-
       <section class="mc-list">
         <h3 class="mc-list__head">
           <span>Needle Steering Videos</span>
@@ -678,7 +633,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         </a>
       </section>
     </div>
-
     <figure class="mc-figure">
       <img src="https://user-images.githubusercontent.com/118206851/201812169-e0b77da0-d3b8-4cc8-9e61-80e21ea415ab.jpg"
            width="3964" height="1008" loading="lazy" decoding="async"
@@ -689,12 +643,10 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       <figcaption>Fracture-directed steering trials, Washington State University.</figcaption>
     </figure>
   </section>
-
   <!-- ========================= MASTER'S PROJECTS ========================= -->
   <section id="masters" aria-labelledby="masters-h">
     <h2 class="mc-section-heading" id="masters-h">Master's Research and Projects</h2>
     <p class="mc-section-note">Mechatronics engineering, University of Tabriz.</p>
-
     <div class="mc-grid mc-grid--2">
       <section class="mc-list">
         <h3 class="mc-list__head"><span>Rehabilitation Systems</span></h3>
@@ -720,7 +672,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
           </span>
         </div>
       </section>
-
       <section class="mc-list">
         <h3 class="mc-list__head"><span>Mobile and Legged Platforms</span></h3>
         <div class="mc-row">
@@ -744,7 +695,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         </div>
       </section>
     </div>
-
     <figure class="mc-figure">
       <img src="https://user-images.githubusercontent.com/118206851/202066614-68ff9cbc-d531-4c05-b7f1-af85118cf1f8.jpg"
            width="4000" height="2250" loading="lazy" decoding="async"
@@ -752,38 +702,35 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       <figcaption>Platforms built during the master's in mechatronics engineering, University of Tabriz.</figcaption>
     </figure>
   </section>
-
   <!-- ============================ TEACHING ============================ -->
   <section id="teaching" aria-labelledby="teaching-h">
     <h2 class="mc-section-heading" id="teaching-h">Teaching, Mentoring, and Entrepreneurship</h2>
     <p class="mc-section-note">Course wikis are public and include lecture notes,
       assignments, and lab material.</p>
-
     <div class="mc-grid mc-grid--2">
       <section class="mc-list">
         <h3 class="mc-list__head"><span>Courses and Roles</span></h3>
-
          <a class="mc-row" href="https://madibabaiasl.github.io/industrial-automation-course/">
           <span class="mc-row__text">
             <span class="mc-row__title">Industrial Automation: PLC & Robotics (MENG 4450)</span>
             <span class="mc-row__meta">Saint Louis University</span>
           </span>
         </a>
-        
+
         <a class="mc-row" href="https://github.com/madibabaiasl/kinematics-robotic-arms-modern-approach/wiki">
           <span class="mc-row__text">
             <span class="mc-row__title">Kinematics of Robotic Manipulators: A Modern Approach (MENG 5440, 4930)</span>
             <span class="mc-row__meta">Saint Louis University</span>
           </span>
         </a>
-        
+
         <a class="mc-row" href="https://github.com/madibabaiasl/modern-robotics-course/wiki">
           <span class="mc-row__text">
             <span class="mc-row__title">Modern Robotics (MENG 5930, 4930)</span>
             <span class="mc-row__meta">Saint Louis University</span>
           </span>
         </a>
-        
+
         <a class="mc-row" href="https://github.com/madibabaiasl/mechatronics-course/wiki">
           <span class="mc-row__text">
             <span class="mc-row__title">Mechatronic System Design (MENG 2400)</span>
@@ -803,7 +750,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
           </span>
         </div>
       </section>
-
       <section class="mc-list">
         <h3 class="mc-list__head">
           <span>Lecture Playlists</span>
@@ -848,7 +794,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       </section>
     </div>
   </section>
-
   <!-- =================== PUBLICATIONS AND RECOGNITION =================== -->
   <section id="publications" aria-labelledby="pubs-h">
     <h2 class="mc-section-heading" id="pubs-h">Publications and Recognition</h2>
@@ -857,7 +802,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       <span class="mc-pub__type">[C]</span> a conference paper. The complete list
       is on <a href="https://scholar.google.com/citations?user=f1s8_GkAAAAJ&amp;hl=en">Google
       Scholar</a>.</p>
-
     <div class="mc-pager" data-per-page="6">
       <div class="mc-pager__head">
         <h3 class="mc-collabel mc-collabel--blue" id="pubs-label">Publications</h3>
@@ -872,7 +816,7 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         <p class="mc-pub__authors">Yang, Babaiasl, Yang</p>
         <p class="mc-pub__venue"><span>Information Fusion</span><span class="mc-pub__year">2026</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">NeuroCommitSSM: Decision-Centric Shared Autonomy
           for Safe Assistive Manipulation via EEG, EMG, and Eye-Tracking Commit
@@ -880,7 +824,7 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         <p class="mc-pub__authors">Sultan, Sangani, Cool, Sikorski, Liu, Akbarpour, Babaiasl</p>
         <p class="mc-pub__venue"><span>IROS 2026</span><span class="mc-pub__year">2026</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">A Multimodal Data Collection Framework for
           Dialogue-Driven Assistive Robotics to Clarify Ambiguities: A
@@ -888,7 +832,7 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         <p class="mc-pub__authors">Liu, Hawkins, Madden, Sultan, Esposito, Babaiasl</p>
         <p class="mc-pub__venue"><span>BioRob 2026</span><span class="mc-pub__year">2026</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">TriSaFeTrans: A Safety-Aware Multimodal Intent
           Recognition Pipeline for Assistive Robotics
@@ -896,7 +840,7 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         <p class="mc-pub__authors">Sultan, Cool, Liu, Tamilselvan, Babaiasl</p>
         <p class="mc-pub__venue"><span>BioRob 2026</span><span class="mc-pub__year">2026</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">WheelArm-Sim: A Manipulation and Navigation
           Combined Multimodal Synthetic Data Generation Simulator for Unified
@@ -904,14 +848,14 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         <p class="mc-pub__authors">Liu, Sultan, Di Giorgio, Hawkins, Esposito, Babaiasl</p>
         <p class="mc-pub__venue"><span>ISMR 2026</span><span class="mc-pub__year">2026</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">NeuroFusion-Trans: A Transformer-Based EEG&ndash;EMG
           Fusion Model for Assistive Robotics <span class="mc-pub__type">[J]</span></h4>
         <p class="mc-pub__authors">Sultan, Liu, Sikorski, Alshathri, El-Shafai, Babaiasl</p>
         <p class="mc-pub__venue"><span>IEEE Access</span><span class="mc-pub__year">2025</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">TransNN-MHA: A Transformer-Based Model to Distinguish
           Real and Imaginary Motor Intent for Assistive Robotics
@@ -919,7 +863,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         <p class="mc-pub__authors">Sultan, Liu, Sikorski, Babaiasl</p>
         <p class="mc-pub__venue"><span>IEEE Access</span><span class="mc-pub__year">2025</span></p>
       </article>
-        
 
        <!--  <article class="mc-pub">
         <h4 class="mc-pub__title">Early Detection and Management of Crop Pests Using
@@ -928,14 +871,14 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         <p class="mc-pub__authors">Camerota, Babaiasl, Shakoor, Esposito</p>
         <p class="mc-pub__venue"><span>IEEE 101st Vehicular Technology Conference</span><span class="mc-pub__year">2025</span></p>
       </article> -->
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">Deployment of Large Language Models to Control
           Mobile Robots at the Edge <span class="mc-pub__type">[C]</span></h4>
         <p class="mc-pub__authors">Sikorski, Schrader, Yu, Billadeau, Meenakshi, Babaiasl</p>
         <p class="mc-pub__venue"><span>International Conference on Mechatronics, Control and Robotics</span><span class="mc-pub__year">2025</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">Improving Robotic Arms Through Natural Language
           Processing, Computer Vision, and Edge Computing
@@ -943,7 +886,7 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         <p class="mc-pub__authors">Sikorski, Yu, Billadeau, Esposito, AliAkbarpour, Babaiasl</p>
         <p class="mc-pub__venue"><span>International Conference on Mechatronics, Control and Robotics</span><span class="mc-pub__year">2025</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">EMG-TransNN-MHA: A Transformer-Based Model for
           Enhanced Motor Intent Recognition in Assistive Robotics
@@ -951,21 +894,21 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         <p class="mc-pub__authors">Aikkarakudiyil Joby, Sikorski, Sultan, Akbarpour, Esposito, Babaiasl</p>
         <p class="mc-pub__venue"><span>IEEE International Conference on Big Data</span><span class="mc-pub__year">2024</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">Vision-Aided Screw-Theory-Based Inverse Kinematics
           Control of a Robot Arm Using ROS 2 <span class="mc-pub__type">[J]</span></h4>
         <p class="mc-pub__authors">Babaiasl, MacGavin, Montes Tolon, Roy</p>
         <p class="mc-pub__venue"><span>Computer Vision News</span><span class="mc-pub__year">2024</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">Robotic Needle Steering: State of the Art and
           Research Challenges <span class="mc-pub__type">[J]</span></h4>
         <p class="mc-pub__authors">Babaiasl, Yang, Swensen</p>
         <p class="mc-pub__venue"><span>Intelligent Service Robotics</span><span class="mc-pub__year">2022</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">Characterization and Modeling of a Thermoplastic
           Elastomer Tissue Simulant Under Uniaxial Compression Loading
@@ -973,21 +916,21 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         <p class="mc-pub__authors">Chen, Ding, Babaiasl, Yang, Swensen</p>
         <p class="mc-pub__venue"><span>Journal of the Mechanical Behavior of Biomedical Materials</span><span class="mc-pub__year">2022</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">Resultant Radius of Curvature of Stylet-and-Tube
           Steerable Needles <span class="mc-pub__type">[C]</span></h4>
         <p class="mc-pub__authors">Yang, Babaiasl, Chen, Ding, Swensen</p>
         <p class="mc-pub__venue"><span>IEEE/RSJ International Conference on Intelligent Robots and Systems</span><span class="mc-pub__year">2020</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">Fracture-Directed Waterjet Needle Steering: Design,
           Modeling, and Path Planning <span class="mc-pub__type">[C]</span></h4>
         <p class="mc-pub__authors">Babaiasl, Yang, Boccelli, Swensen</p>
         <p class="mc-pub__venue"><span>IEEE RAS/EMBS International Conference for Biomedical Robotics and Biomechatronics</span><span class="mc-pub__year">2020</span></p>
       </article>
-        
+
       <article class="mc-pub">
         <h4 class="mc-pub__title">Predictive Mechanics-Based Model for Depth of Cut of
           Waterjet in Soft Tissue <span class="mc-pub__type">[J]</span></h4>
@@ -1020,9 +963,11 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     <h3 class="mc-collabel mc-collabel--blue">Honors, Awards, and Media</h3>
     <div class="mc-grid mc-grid--2">
       <div class="mc-stack">
-        <section class="mc-list">
-          <h3 class="mc-list__head"><span>Grants and Fellowships (Selected - Full list in my CV)</span></h3>
-
+        <section class="mc-list mc-list--paged" data-paged="6">
+          <h3 class="mc-list__head"><span>Grants, Fellowships, and Travel Awards (Selected - Full list in my CV)</span></h3>
+          <!-- the arrows are inserted after this heading by script, so a
+               visitor without JavaScript sees the whole list and no dead
+               controls; travel awards follow the grants on later pages -->
           <div class="mc-award">
             <span class="mc-award__meta">2026&ndash;2029<br><span class="mc-chip mc-chip--funding">$1.2M</span></span>
             <p class="mc-award__body">Co-investigator, NSF MRI Track 1: development of
@@ -1061,31 +1006,56 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
               Research, implantable and wearable solutions for quadriceps
               rehabilitation, with principal investigator Koyal Garg.</p>
           </div>
-
-           
-
+          <div class="mc-award">
+            <span class="mc-award__meta">May 2026<br><span class="mc-chip mc-chip--funding">$1k</span></span>
+            <p class="mc-award__body">Travel Award, NSF M3X principal investigator
+              meeting.</p>
+          </div>
+          <div class="mc-award">
+            <span class="mc-award__meta">Jun 2026</span>
+            <p class="mc-award__body">Golden Ticket, KEEN Advancing Curriculum With
+              Entrepreneurial Mindset (ACE) workshop.</p>
+          </div>
+          <div class="mc-award">
+            <span class="mc-award__meta">Jan 2026</span>
+            <p class="mc-award__body">Golden Ticket, KEEN National Conference.</p>
+          </div>
+          <div class="mc-award">
+            <span class="mc-award__meta">2024, 2025</span>
+            <p class="mc-award__body">NSF travel grants to attend the 2024 and 2025
+              NSF FRR&ndash;NRI principal investigator meetings as an aspiring PI.</p>
+          </div>
+          <div class="mc-award">
+            <span class="mc-award__meta">Apr 2025</span>
+            <p class="mc-award__body">Golden Ticket, KEEN Project-Based
+              Entrepreneurial Learning (PBEL) workshop.</p>
+          </div>
+          <div class="mc-award">
+            <span class="mc-award__meta">Jul 2024, Aug 2026</span>
+            <p class="mc-award__body">Luce Foundation travel grants, Clare Boothe Luce
+              Program for Women in STEM annual conference.</p>
+          </div>
          <!-- <div class="mc-award">
             <span class="mc-award__meta">Aug 2024&ndash;May 2026</span>
             <p class="mc-award__body">Paid undergraduate research assistants through
               the SURGE program.</p>
           </div> -->
-          
+
          <!-- <div class="mc-award">
             <span class="mc-award__meta">Oct 2024, 2025</span>
             <p class="mc-award__body">NSF travel grants to attend the 2024 and 2025
               NSF FRR&ndash;NRI principal investigator meetings as an aspiring PI.</p>
           </div>-->
-          
+
         <!--  <div class="mc-award">
             <span class="mc-award__meta">Jul 2024</span>
             <p class="mc-award__body">Luce Foundation travel grant, Clare Boothe Luce
               Program for Women in STEM annual conference.</p>
           </div>-->
-          
+
         </section>
         <section class="mc-list">
           <h3 class="mc-list__head"><span>Media Coverage</span></h3>
-
             <div class="mc-award">
             <span class="mc-award__meta">2025<br><span class="mc-chip mc-chip--media">Feature</span></span>
             <p class="mc-award__body">The Mecharithm Lab is featured in Computer
@@ -1094,14 +1064,13 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
               Magazine</a>.
             </p>
           </div>
-
           <div class="mc-award">
             <span class="mc-award__meta">Apr 2022<br><span class="mc-chip mc-chip--media">Feature</span></span>
             <p class="mc-award__body">A Day in the Life of a Robotics Engineer,
               <a href="https://alltogether.swe.org/2022/04/a-day-in-the-life-of-robotics-engineer-madi-babaiasl/">Society
               of Women Engineers blog</a>.</p>
           </div>
-          
+
           <div class="mc-award">
             <span class="mc-award__meta">Jan 2022<br><span class="mc-chip mc-chip--media">Feature</span></span>
             <p class="mc-award__body">Women in Computer Vision,
@@ -1130,21 +1099,18 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       <div class="mc-stack">
         <section class="mc-list">
           <h3 class="mc-list__head"><span>Awards and Honors</span></h3>
-
-
            <div class="mc-award">
             <span class="mc-award__meta">2026</span>
             <p class="mc-award__body">2026 Campus KEEN Rising Star,
               Kern Entrepreneurial Engineering Network (KEEN, Saint Louis University. 19 recipients across the national KEEN network in 2026.</p>
           </div>
-
           <div class="mc-award">
             <span class="mc-award__meta">2026</span>
             <p class="mc-award__body">SSE Excellence in Teaching Innovation Award,
               School of Science and Engineering, Saint Louis University. Selected
               through peer nomination.</p>
           </div>
-          
+
           <div class="mc-award">
             <span class="mc-award__meta">2026</span>
             <p class="mc-award__body">Faculty Excellence Award, Student Government
@@ -1169,12 +1135,11 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
             <p class="mc-award__body">Best Pitch Award, Entrepreneurial Mindset in
               Robotics and Mechatronics Courses workshop, KEEN National Conference.</p>
           </div>
-          
-          
+
+
         </section>
         <section class="mc-list">
           <h3 class="mc-list__head"><span>Earlier Honors</span></h3>
-
           <div class="mc-award">
             <span class="mc-award__meta">May 2019<br><span class="mc-chip mc-chip--funding">$2k</span></span>
             <p class="mc-award__body">
@@ -1207,10 +1172,8 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       </div>
     </div>
   </section>
-
   <section id="talks" aria-labelledby="talks-h">
     <h2 class="mc-section-heading" id="talks-h">Invited Talks and Presentations</h2>
-
     <div class="mc-grid mc-grid--2">
       <section class="mc-list">
         <h3 class="mc-list__head"><span>Recent</span></h3>
@@ -1263,7 +1226,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
           </span>
         </div>
       </section>
-
       <section class="mc-list">
         <h3 class="mc-list__head"><span>Conference and Earlier</span></h3>
         <a class="mc-row" href="https://ismr.gatech.edu/">
@@ -1311,9 +1273,7 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       </section>
     </div>
   </section>
-
 </main>
-
 <!-- ============================ FOOTER ============================ -->
 <footer class="mc-footer">
   <div class="mc-footer__inner">
@@ -1357,15 +1317,12 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     </div>
   </div>
 </footer>
-
-
 <script>
 /* Progressive enhancement only. If this file never runs, the page is complete
    and static: nothing is hidden by the stylesheet alone. */
 (function () {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   var strip = document.querySelector('.mc-strip');
-
   /* ---- 1. the strip gains a shadow once the page has moved ---- */
   if (strip) {
     var onScroll = function () {
@@ -1374,7 +1331,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
   }
-
   /* ---- 2. scroll spy: the strip reports where the reader is ----
      Runs regardless of motion preference. It is orientation, not decoration,
      and the current item is marked by weight as well as the amber rule. */
@@ -1388,7 +1344,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     .map(function (id) { return document.getElementById(id); })
     .filter(function (el) { return el && el.matches('main > section'); });
   var homeLink = byId.main;
-
   if (sections.length && 'IntersectionObserver' in window) {
     var visible = new Set();
     var spy = new IntersectionObserver(function (entries) {
@@ -1405,10 +1360,8 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     }, { rootMargin: '-72px 0px -55% 0px', threshold: 0 });
     sections.forEach(function (sec) { spy.observe(sec); });
   }
-
   /* ---- 3. blocks rise as they enter, once each ---- */
   if (reduced.matches || !('IntersectionObserver' in window)) { return; }
-
   var targets = [];
   document.querySelectorAll('main > section').forEach(function (sec, si) {
     if (si === 0) { return; }               // the hero has its own sequence
@@ -1421,7 +1374,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       targets.push(el);
     });
   });
-
   /* stagger only among siblings that share a row, capped at four steps */
   document.querySelectorAll('.mc-grid').forEach(function (grid) {
     Array.prototype.slice.call(grid.children).forEach(function (child, i) {
@@ -1429,7 +1381,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       if (el && i > 0) { el.setAttribute('data-i', String(Math.min(i, 3))); }
     });
   });
-
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
       if (!e.isIntersecting) { return; }
@@ -1437,9 +1388,7 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       io.unobserve(e.target);               // one pass, never replayed
     });
   }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
-
   targets.forEach(function (el) { io.observe(el); });
-
   /* if the visitor switches the preference on mid-visit, stop hiding things */
   reduced.addEventListener('change', function (e) {
     if (e.matches) {
@@ -1448,7 +1397,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
   });
 })();
 </script>
-
 <script>
 /* Pager for the publications grid. Progressive enhancement: if this never
    runs, every entry is already on the page and no dead controls are shown. */
@@ -1460,15 +1408,12 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
   var items = Array.prototype.slice.call(viewport.children);
   var per = parseInt(pager.getAttribute('data-per-page'), 10) || 6;
   if (items.length <= per) { return; }
-
   var pages = Math.ceil(items.length / per);
   var page = 0;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-
   /* ---- controls ---- */
   var controls = document.createElement('div');
   controls.className = 'mc-pager__controls';
-
   function arrow(dir, label) {
     var b = document.createElement('button');
     b.type = 'button';
@@ -1481,7 +1426,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     b.addEventListener('click', function () { go(page + dir); });
     return b;
   }
-
   var prev = arrow(-1, 'Previous publications');
   var next = arrow(1, 'Next publications');
   /* No visible counter. A screen reader still needs to know the move
@@ -1490,12 +1434,10 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
   count.className = 'mc-pager__count mc-visually-hidden';
   count.setAttribute('role', 'status');
   count.setAttribute('aria-live', 'polite');
-
   controls.appendChild(prev);
   controls.appendChild(next);
   controls.appendChild(count);
   head.appendChild(controls);
-
   /* ---- keep the block from resizing between pages ----
      Measured once, after layout, from the tallest page. Without this the
      section jumps every time an arrow is pressed. */
@@ -1509,7 +1451,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     show(page, true);
     viewport.style.minHeight = tallest + 'px';
   }
-
   function show(p, silent) {
     items.forEach(function (el, i) {
       el.hidden = Math.floor(i / per) !== p;
@@ -1520,7 +1461,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       next.disabled = p === pages - 1;
     }
   }
-
   function go(p) {
     if (p < 0 || p > pages - 1 || p === page) { return; }
     page = p;
@@ -1536,20 +1476,16 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       });
     });
   }
-
   /* ---- arrow keys move between pages when focus is inside the block ---- */
   pager.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowLeft') { go(page - 1); }
     if (e.key === 'ArrowRight') { go(page + 1); }
   });
-
   show(0);
   count.textContent = 'Publications, page 1 of ' + pages + '.';
   prev.disabled = true;
-
   if (document.readyState === 'complete') { lockHeight(); }
   else { window.addEventListener('load', lockHeight); }
-
   var resizeTimer;
   window.addEventListener('resize', function () {
     window.clearTimeout(resizeTimer);
@@ -1557,18 +1493,110 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
   }, { passive: true });
 })();
 </script>
-
+<script>
+/* Pager for award cards marked with data-paged. Same contract as the
+   publications pager: progressive enhancement only, so without this script
+   every entry is on the page and no dead controls are shown. */
+(function () {
+  var lists = document.querySelectorAll('.mc-list[data-paged]');
+  Array.prototype.forEach.call(lists, function (list) {
+    var items = Array.prototype.slice.call(list.querySelectorAll('.mc-award'));
+    var per = parseInt(list.getAttribute('data-paged'), 10) || 6;
+    if (items.length <= per) { return; }
+    var pages = Math.ceil(items.length / per);
+    var page = 0;
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var head = list.querySelector('.mc-list__head');
+    if (!head) { return; }
+    /* ---- controls, inserted after the card heading ---- */
+    var controls = document.createElement('div');
+    controls.className = 'mc-list__controls';
+    function arrow(dir, label) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'mc-pager__btn mc-pager__btn--sm';
+      b.setAttribute('aria-label', label);
+      b.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" ' +
+        'aria-hidden="true" stroke="currentColor" stroke-width="2" ' +
+        'stroke-linecap="round" stroke-linejoin="round"><path d="' +
+        (dir < 0 ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6') + '"/></svg>';
+      b.addEventListener('click', function () { go(page + dir); });
+      return b;
+    }
+    var prev = arrow(-1, 'Previous entries');
+    var next = arrow(1, 'Next entries');
+    /* off-screen status line so a screen reader hears the page turn */
+    var count = document.createElement('p');
+    count.className = 'mc-visually-hidden';
+    count.setAttribute('role', 'status');
+    count.setAttribute('aria-live', 'polite');
+    controls.appendChild(prev);
+    controls.appendChild(next);
+    controls.appendChild(count);
+    head.insertAdjacentElement('afterend', controls);
+    /* ---- keep the card from resizing between pages ---- */
+    function lockHeight() {
+      list.style.minHeight = '';
+      var tallest = 0;
+      for (var p = 0; p < pages; p++) {
+        show(p, true);
+        tallest = Math.max(tallest, list.offsetHeight);
+      }
+      show(page, true);
+      list.style.minHeight = tallest + 'px';
+    }
+    function show(p, silent) {
+      items.forEach(function (el, i) {
+        el.hidden = Math.floor(i / per) !== p;
+      });
+      if (!silent) {
+        count.textContent = 'Entries, page ' + (p + 1) + ' of ' + pages + '.';
+        prev.disabled = p === 0;
+        next.disabled = p === pages - 1;
+      }
+    }
+    function go(p) {
+      if (p < 0 || p > pages - 1 || p === page) { return; }
+      page = p;
+      if (reduced.matches) {
+        show(page);
+        return;
+      }
+      list.classList.add('is-turning');
+      window.requestAnimationFrame(function () {
+        show(page);
+        window.requestAnimationFrame(function () {
+          list.classList.remove('is-turning');
+        });
+      });
+    }
+    /* arrow keys page while focus is inside the card */
+    list.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { go(page - 1); }
+      if (e.key === 'ArrowRight') { go(page + 1); }
+    });
+    show(0);
+    count.textContent = 'Entries, page 1 of ' + pages + '.';
+    prev.disabled = true;
+    if (document.readyState === 'complete') { lockHeight(); }
+    else { window.addEventListener('load', lockHeight); }
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(lockHeight, 200);
+    }, { passive: true });
+  });
+})();
+</script>
 <script>
 /* Photographs are hotlinked from GitHub, which throttles and occasionally
    drops a request. Retry once, then remove the image rather than leave a
    broken icon with a paragraph of alt text sprawling across the card. */
 (function () {
   var imgs = document.querySelectorAll('.mc-figure img, .mc-hero__band img');
-
   Array.prototype.forEach.call(imgs, function (img) {
     var attempts = 0;
     var original = img.getAttribute('src');
-
     function drop() {
       img.classList.add('is-failed');
       var fig = img.closest('figure');
@@ -1576,7 +1604,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
         fig.classList.add('is-empty');
       }
     }
-
     function onError() {
       attempts++;
       if (attempts === 1) {
@@ -1587,7 +1614,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
       }
       drop();
     }
-
     img.addEventListener('error', onError);
     /* an image that already failed before this script parsed */
     if (img.complete && img.naturalWidth === 0) { onError(); }

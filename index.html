@@ -329,22 +329,25 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
 @media (max-width:768px){
   .mc-pager__viewport{grid-template-columns:1fr}
 }
-/* ==================== paged award list ====================
-   The same contract as the publications pager, applied to a single award
-   card: entries show a page at a time, arrows inserted by script only, so
-   a visitor without JavaScript sees the complete list and no dead controls.
-   The buttons reuse .mc-pager__btn; only the size is new. */
+/* ==================== paged cards ====================
+   The same contract as the publications pager, applied to a single card of
+   award or row entries: entries show a page at a time, arrows inserted by
+   script only, so a visitor without JavaScript sees the complete list and
+   no dead controls. The buttons reuse .mc-pager__btn; only the size is new. */
 .mc-list__controls{display:flex;justify-content:flex-end;align-items:center;
   gap:var(--mc-space-3);margin:0 0 var(--mc-space-2)}
 .mc-pager__btn--sm{width:32px;height:32px}
 /* paging hides whole rows with [hidden]; the first visible row of a page
    must not keep the divider it inherited from a now-hidden neighbour */
 .mc-award[hidden] + .mc-award{border-top:0}
+.mc-row[hidden] + .mc-row{border-top:0}
 @media (prefers-reduced-motion:no-preference){
   /* the incoming page rises the same 12px used everywhere else */
-  .mc-list--paged .mc-award{transition:opacity 320ms var(--mc-ease),
+  .mc-list--paged .mc-award,
+  .mc-list--paged .mc-row{transition:opacity 320ms var(--mc-ease),
     transform 320ms var(--mc-ease)}
-  .mc-list--paged.is-turning .mc-award{opacity:0;transform:translateY(12px);
+  .mc-list--paged.is-turning .mc-award,
+  .mc-list--paged.is-turning .mc-row{opacity:0;transform:translateY(12px);
     transition:none}
 }
 /* ==================== publication entries ==================== */
@@ -964,7 +967,7 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     <div class="mc-grid mc-grid--2">
       <div class="mc-stack">
         <section class="mc-list mc-list--paged" data-paged="6">
-          <h3 class="mc-list__head"><span>Grants, Fellowships, and Travel Awards</span></h3>
+          <h3 class="mc-list__head"><span>Grants, Fellowships, and Travel Awards (Selected - Full list in my CV)</span></h3>
           <!-- the arrows are inserted after this heading by script, so a
                visitor without JavaScript sees the whole list and no dead
                controls; travel awards follow the grants on later pages -->
@@ -1175,7 +1178,7 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
   <section id="talks" aria-labelledby="talks-h">
     <h2 class="mc-section-heading" id="talks-h">Invited Talks and Presentations</h2>
     <div class="mc-grid mc-grid--2">
-      <section class="mc-list">
+      <section class="mc-list mc-list--paged" data-paged="6">
         <h3 class="mc-list__head"><span>Recent</span></h3>
         <div class="mc-row">
           <span class="mc-row__text">
@@ -1226,7 +1229,7 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
           </span>
         </div>
       </section>
-      <section class="mc-list">
+      <section class="mc-list mc-list--paged" data-paged="6">
         <h3 class="mc-list__head"><span>Conference and Earlier</span></h3>
         <a class="mc-row" href="https://ismr.gatech.edu/">
           <span class="mc-row__text">
@@ -1494,13 +1497,18 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
 })();
 </script>
 <script>
-/* Pager for award cards marked with data-paged. Same contract as the
-   publications pager: progressive enhancement only, so without this script
-   every entry is on the page and no dead controls are shown. */
+/* Pager for cards marked with data-paged, whether they hold award entries
+   or list rows. Same contract as the publications pager: progressive
+   enhancement only, so without this script every entry is on the page and
+   no dead controls are shown. */
 (function () {
   var lists = document.querySelectorAll('.mc-list[data-paged]');
+  var lockers = [];
   Array.prototype.forEach.call(lists, function (list) {
     var items = Array.prototype.slice.call(list.querySelectorAll('.mc-award'));
+    if (!items.length) {
+      items = Array.prototype.slice.call(list.querySelectorAll('.mc-row'));
+    }
     var per = parseInt(list.getAttribute('data-paged'), 10) || 6;
     if (items.length <= per) { return; }
     var pages = Math.ceil(items.length / per);
@@ -1534,17 +1542,6 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     controls.appendChild(next);
     controls.appendChild(count);
     head.insertAdjacentElement('afterend', controls);
-    /* ---- keep the card from resizing between pages ---- */
-    function lockHeight() {
-      list.style.minHeight = '';
-      var tallest = 0;
-      for (var p = 0; p < pages; p++) {
-        show(p, true);
-        tallest = Math.max(tallest, list.offsetHeight);
-      }
-      show(page, true);
-      list.style.minHeight = tallest + 'px';
-    }
     function show(p, silent) {
       items.forEach(function (el, i) {
         el.hidden = Math.floor(i / per) !== p;
@@ -1578,14 +1575,37 @@ main > section > .mc-section-heading + .mc-list{margin-top:var(--mc-space-8)}
     show(0);
     count.textContent = 'Entries, page 1 of ' + pages + '.';
     prev.disabled = true;
-    if (document.readyState === 'complete') { lockHeight(); }
-    else { window.addEventListener('load', lockHeight); }
-    var resizeTimer;
-    window.addEventListener('resize', function () {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(lockHeight, 200);
-    }, { passive: true });
+    /* height locking is deferred and shared, see lockAll below */
+    lockers.push({
+      clear: function () { list.style.minHeight = ''; },
+      lock: function () {
+        var tallest = 0;
+        for (var p = 0; p < pages; p++) {
+          show(p, true);
+          tallest = Math.max(tallest, list.offsetHeight);
+        }
+        show(page, true);
+        list.style.minHeight = tallest + 'px';
+      }
+    });
   });
+  if (!lockers.length) { return; }
+  /* ---- keep each card from resizing between pages ----
+     Measured once, after layout, from the tallest page. Cards that sit
+     side by side in a grid stretch to a shared row height, so every lock
+     first clears every card's previous lock; measuring against a stale
+     neighbour would otherwise ratchet the heights upward on resize. */
+  function lockAll() {
+    lockers.forEach(function (l) { l.clear(); });
+    lockers.forEach(function (l) { l.lock(); });
+  }
+  if (document.readyState === 'complete') { lockAll(); }
+  else { window.addEventListener('load', lockAll); }
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(lockAll, 200);
+  }, { passive: true });
 })();
 </script>
 <script>
